@@ -70,7 +70,7 @@ bool Repository::update() {
     bool hasChanged = false;
     for (auto& record : records) {
         std::string newHash = calculateFileHash(record.filename);
-        if(newHash != record.newHash){
+        if(newHash != record.oldHash){
             hasChanged = true;
         }
         record.newHash = newHash;
@@ -136,6 +136,22 @@ void Repository::saveRecords() {
     }
     csvFile.close();
 }
+
+
+void Repository::untrackFile(const std::string& filename) {
+
+    // Find and remove the record with the given filename
+    auto it = std::find_if(records.begin(), records.end(),
+                           [&filename](const FileRecord& record) { return record.filename == filename; });
+
+    if (it != records.end()) {
+        records.erase(it);
+        saveRecords();  // Save the updated records back to the CSV file
+    } else {
+        throw std::runtime_error("The file you selected is not staged.");
+    }
+}
+
 
 // Helper function to calculate the hash of a file's content
 std::string Repository::calculateFileHash(const std::string& filepath) {

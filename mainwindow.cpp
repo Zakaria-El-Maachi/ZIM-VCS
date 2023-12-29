@@ -5,6 +5,7 @@
 #include "CLICode/VersionControlSystem.h"
 #include <filesystem>
 #include <iostream>
+#include "CLICode/AuthenticationSystem.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -122,13 +123,29 @@ void MainWindow::addFileToStatusList(const QString &baseFolderPath, const QStrin
 
 void MainWindow::on_removeFileBtn_clicked()
 {
-    QTableWidgetItem *currentItem = files->currentItem();
+    try{
+        if (QListWidgetItem *currentRepo = repos->currentItem()){
+            QTableWidgetItem *currentItem = files->currentItem();
 
-    if (currentItem) {
-        int row = currentItem->row();
-        files->removeRow(row);
-    } else {
-        displayError("No item selected to remove.");
+            if (currentItem) {
+                int row = currentItem->row();
+                QString baseFolderPath = getCurrentRepo();
+
+                QString filename = files->item(row, 0)->text();
+
+                QString filePath = baseFolderPath + '/' + filename;
+                // Call Repository's untrackFile method to untrack the file
+                Repository repo = Repository(baseFolderPath.toStdString());
+                repo.untrackFile(filePath.toStdString());
+                files->removeRow(row); // Remove the row from the table
+            } else {
+                displayError("No item selected to remove.");
+            }
+        } else {
+            throw std::runtime_error("No Repository to add files from.");
+        }
+    } catch (const std::exception& e) {
+        displayError(e.what());
     }
 }
 
@@ -136,12 +153,16 @@ void MainWindow::on_removeFileBtn_clicked()
 void MainWindow::on_commitBtn_clicked()
 {
     try{
-        QString baseFolderPath = getCurrentRepo();
-        VersionControlSystem fileVcs(baseFolderPath.toStdString());
-        fileVcs.commit();
-        for (int row = 0; row < files->rowCount(); row++) {
-            QTableWidgetItem *fileStatus = files->item(row, 1);
-            fileStatus->setText("Up to Date");
+        if (QListWidgetItem *currentItem = repos->currentItem()){
+            QString baseFolderPath = getCurrentRepo();
+            VersionControlSystem fileVcs(baseFolderPath.toStdString());
+            fileVcs.commit();
+            for (int row = 0; row < files->rowCount(); row++) {
+                QTableWidgetItem *fileStatus = files->item(row, 1);
+                fileStatus->setText("Up to Date");
+            }
+        } else {
+            throw std::runtime_error("No Repository to add files from.");
         }
     } catch (const std::exception& e) {
         displayError(e.what());
@@ -166,9 +187,38 @@ void MainWindow::on_openBtn_clicked()
 
 void MainWindow::on_refreshBtn_clicked()
 {
-    QString baseFolderPath = getCurrentRepo();
-    VersionControlSystem fileVcs(baseFolderPath.toStdString());
-    fileVcs.refresh();
-    updateStatusList();
+
+    try{
+        if (QListWidgetItem *currentItem = repos->currentItem()){
+            QString baseFolderPath = getCurrentRepo();
+            VersionControlSystem fileVcs(baseFolderPath.toStdString());
+            fileVcs.refresh();
+            updateStatusList();
+        } else {
+            throw std::runtime_error("No Repository to add files from.");
+        }
+    } catch (const std::exception& e) {
+        displayError(e.what());
+    }
+}
+
+
+void MainWindow::on_signin_clicked()
+{
+    AuthenticationSystem auth;
+
+
+
+    // Input from user
+    QString user, pass;
+    user = ui->username->text();
+    pass = ui->password->text();
+
+    if (auth.authenticateUser(user.toStdString(), pass.toStdString())) {
+        ui->stackedWidget->setCurrentWidget(ui->repoPage);
+    } else {
+        displayError("Wrong Credentials.");
+    }
+
 }
 

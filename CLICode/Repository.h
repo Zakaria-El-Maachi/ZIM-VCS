@@ -18,6 +18,7 @@ public:
     void initializeRepository(bool how);
     bool update();
     void trackFile(const std::string& filename);
+    void untrackFile(const std::string& filename);
     void updateCommit();
     std::vector<bool> showStatus();
     std::vector<std::string> getFiles();

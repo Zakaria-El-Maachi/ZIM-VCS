@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CLICode/AuthenticationSystem.cpp \
     CLICode/FileHandler.cpp \
     CLICode/Repository.cpp \
     CLICode/Utils.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    CLICode/AuthenticationSystem.h \
     CLICode/FileHandler.h \
     CLICode/Repository.h \
     CLICode/Utils.h \
@@ -25,6 +27,11 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui
+
+INCLUDEPATH += "C:/Program Files/OpenSSL-Win64/include"
+
+LIBS += -L"C:/Program Files/OpenSSL-Win64/lib" \
+        -llibcrypto
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

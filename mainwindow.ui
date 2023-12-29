@@ -14,220 +14,281 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QFrame" name="frame">
+   <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>9</y>
-      <width>601</width>
-      <height>511</height>
+      <x>20</x>
+      <y>39</y>
+      <width>611</width>
+      <height>531</height>
      </rect>
     </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+    <property name="currentIndex">
+     <number>1</number>
     </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>10</y>
-       <width>561</width>
-       <height>491</height>
-      </rect>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="repos">
-      <attribute name="title">
-       <string>Repositories</string>
-      </attribute>
-      <widget class="QListWidget" name="reposList">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>80</y>
-         <width>531</width>
-         <height>301</height>
-        </rect>
-       </property>
+    <widget class="QWidget" name="repoPage">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>571</width>
+        <height>491</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="repos">
+       <attribute name="title">
+        <string>Repositories</string>
+       </attribute>
+       <widget class="QListWidget" name="reposList">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>80</y>
+          <width>531</width>
+          <height>301</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="initBtn">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>20</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Initialize Repository</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="selectBtn">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>410</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Select Repository</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="removeRepoBtn">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>20</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Remove Repository</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="openBtn">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>20</y>
+          <width>151</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Open Existing Repository</string>
+        </property>
+       </widget>
       </widget>
-      <widget class="QPushButton" name="initBtn">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>20</y>
-         <width>121</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Initialize Repository</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="selectBtn">
-       <property name="geometry">
-        <rect>
-         <x>420</x>
-         <y>410</y>
-         <width>121</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Select Repository</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="removeRepoBtn">
-       <property name="geometry">
-        <rect>
-         <x>410</x>
-         <y>20</y>
-         <width>121</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Remove Repository</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="openBtn">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>20</y>
-         <width>151</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Open Existing Repository</string>
-       </property>
+      <widget class="QWidget" name="files">
+       <attribute name="title">
+        <string>Tracked Files</string>
+       </attribute>
+       <widget class="QTableWidget" name="statusList">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>150</y>
+          <width>531</width>
+          <height>301</height>
+         </rect>
+        </property>
+        <property name="columnCount">
+         <number>2</number>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>200</number>
+        </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>200</number>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Files</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Status</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPushButton" name="addBtn">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>90</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Add File</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="commitBtn">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>90</y>
+          <width>131</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Commit Changes</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="removeFileBtn">
+        <property name="geometry">
+         <rect>
+          <x>330</x>
+          <y>90</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Remove File</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="repoName">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>10</y>
+          <width>361</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>26</pointsize>
+          <bold>true</bold>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>No Repository Selected</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="refreshBtn">
+        <property name="geometry">
+         <rect>
+          <x>470</x>
+          <y>90</y>
+          <width>81</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Refresh</string>
+        </property>
+       </widget>
       </widget>
      </widget>
-     <widget class="QWidget" name="files">
-      <attribute name="title">
-       <string>Tracked Files</string>
-      </attribute>
-      <widget class="QTableWidget" name="statusList">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>150</y>
-         <width>531</width>
-         <height>301</height>
-        </rect>
-       </property>
-       <property name="columnCount">
-        <number>2</number>
-       </property>
-       <attribute name="horizontalHeaderCascadingSectionResizes">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderMinimumSectionSize">
-        <number>200</number>
-       </attribute>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>200</number>
-       </attribute>
-       <attribute name="horizontalHeaderStretchLastSection">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="verticalHeaderStretchLastSection">
-        <bool>false</bool>
-       </attribute>
-       <column>
-        <property name="text">
-         <string>Files</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Status</string>
-        </property>
-       </column>
-      </widget>
-      <widget class="QPushButton" name="addBtn">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>111</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Add File</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="commitBtn">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>90</y>
-         <width>131</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Commit Changes</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="removeFileBtn">
-       <property name="geometry">
-        <rect>
-         <x>320</x>
-         <y>90</y>
-         <width>111</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Remove File</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="repoName">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>20</y>
-         <width>361</width>
-         <height>51</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>26</pointsize>
-         <bold>true</bold>
-         <underline>true</underline>
-        </font>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>No Repository Selected</string>
-       </property>
-       <property name="alignment">
+    </widget>
+    <widget class="QWidget" name="authPage">
+     <widget class="QWidget" name="formLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>180</y>
+        <width>181</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="labelAlignment">
         <set>Qt::AlignCenter</set>
        </property>
-      </widget>
-      <widget class="QPushButton" name="refreshBtn">
-       <property name="geometry">
-        <rect>
-         <x>460</x>
-         <y>90</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
+       <property name="formAlignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
        </property>
-       <property name="text">
-        <string>Refresh</string>
+       <property name="verticalSpacing">
+        <number>20</number>
        </property>
-      </widget>
+       <item row="0" column="0">
+        <widget class="QLabel" name="userLabel">
+         <property name="text">
+          <string>Username</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="username"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="passLabel">
+         <property name="text">
+          <string>Password</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="password"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="signin">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Sign In</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </widget>

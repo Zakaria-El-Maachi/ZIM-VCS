@@ -38,6 +38,8 @@ private slots:
 
     void on_refreshBtn_clicked();
 
+    void on_signin_clicked();
+
 private:
     Ui::MainWindow *ui;
     QListWidget *repos;
