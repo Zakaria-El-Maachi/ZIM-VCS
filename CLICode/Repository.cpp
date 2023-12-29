@@ -79,6 +79,7 @@ bool Repository::update() {
     return hasChanged;
 }
 
+// Refresh record Statuses and return whether a file has been modified
 void Repository::updateCommit() {
     bool hasChanged = update();
     if(!hasChanged) throw std::runtime_error("At least one file must be modified before committing.");

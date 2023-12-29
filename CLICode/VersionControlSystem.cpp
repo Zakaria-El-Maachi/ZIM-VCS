@@ -17,10 +17,12 @@ void VersionControlSystem::init() {
     }
 }
 
+// Returns a vector of all added filenames
 std::vector<std::string> VersionControlSystem::getFiles(){
     return repo.getFiles();
 }
 
+// Refresh added files' statuses
 void VersionControlSystem::refresh(){
     repo.update();
 }

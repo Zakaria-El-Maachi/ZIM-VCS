@@ -7,23 +7,28 @@
 #include <iostream>
 #include "CLICode/AuthenticationSystem.h"
 
+// Constructor for MainWindow class
 MainWindow::MainWindow(QWidget *parent)
+    // Setup UI and initialize class members
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    repos = ui->reposList;
-    tabs = ui->tabWidget;
-    files = ui->statusList;
+    repos = ui->reposList; // List of repositories
+    tabs = ui->tabWidget;   // Tabs in the UI
+    files = ui->statusList;  // List showing file status
     QCoreApplication::setApplicationName( QString("ZIM Version Control System") );
-    setWindowTitle( QCoreApplication::applicationName() );
+    setWindowTitle( QCoreApplication::applicationName() );  // Set window title
+
 }
 
+// Destructor for MainWindow class
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+// Slot function for initializing a new repository
 void MainWindow::on_initBtn_clicked()
 {
     QString folderPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "C://");
@@ -37,17 +42,21 @@ void MainWindow::on_initBtn_clicked()
     }
 }
 
+// Slot function to remove a repository from the list
 void MainWindow::on_removeRepoBtn_clicked()
 {
-
+    // Similar structure to initBtn for selecting directory
     QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "C://");
 
+    // Check if a directory is selected
     if (dirPath.isEmpty()) {
         displayError("No Folder has been selected");
     } else {
+        // Check for specific version control file in directory
         QString filePath = QDir(dirPath).filePath("version_control.csv");
 
         if (QFile::exists(filePath)) {
+            // If file exists, attempt to remove it, else show error
             if (!QFile::remove(filePath)) {
                 displayError("Error Removing Repository");
             } else{
@@ -59,6 +68,7 @@ void MainWindow::on_removeRepoBtn_clicked()
     }
 }
 
+// Slot function to select a repository from the list
 void MainWindow::on_selectBtn_clicked()
 {
     try {
