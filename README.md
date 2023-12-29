@@ -16,6 +16,7 @@ ZIM-VCS, short for Zakaria-Imane-Mohieddine VCS, is a lightweight, user-friendly
   - [Add](#add)
   - [Commit](#commit)
   - [Status](#status)
+  - [Rollback](#rollback)
 - [Dependencies](#dependencies)
 - [Acknowledgments](#acknowledgments)
 
@@ -24,11 +25,12 @@ ZIM-VCS, short for Zakaria-Imane-Mohieddine VCS, is a lightweight, user-friendly
 - **Graphical User Interface (GUI):** A modern, simple interface for managing your version control needs with ease.
 - **Initialize (init):** Set up your project repository with just a few clicks.
 - **Remove (remove repository):** Unsets the project repository by only browsing through the file explorer.
-- **Add (add):** Add files to your repository via the GUI to begin tracking changes.
+- **Add (add):** Add files or directories to your repository via the GUI to begin tracking changes.
 - **Untrack (remove file):** No longer track an added file, or store its changes.
 - **Commit (commit):** Save your changes and maintain a history of modifications with visual feedback.
 - **Status (status):** Visually check the current state of your files to see any changes or updates.
 - **Refresh (refresh):** Refresh the repository so all tracked files' statuses are up to date.
+- **Rollback (refresh):** Change the files' content to match the chosen version.
 
 ## Getting Started
 
@@ -41,7 +43,7 @@ To get started with ZIM-VCS, download the latest release from our repository and
 
 ## Launching the Application
 
-- **Open ZIM-VCS**: Locate the ZIM-VCS application on your system and open it. Upon launching, you'll be greeted with the main interface where you can start interacting with your version control system.
+- **Open ZIM-VCS**: Locate the ZIM-VCS application on your system and open it. Upon launching, you'll be greeted with the main interface where you can start interacting with your version control system. The login is "imane" and the password is "azerty".
 
 ## Compilation
 
@@ -112,8 +114,8 @@ The absolute path to the selected folder (vcsTest) is added to the dashboard as 
 
 ## Add
 
-Now in order to add files to track in the desired repository, click **Select Repository > Add File**, the File Explorer window shows up. Add files to your repository through the GUI. Browse your system, select the files you want to track, and add them to your project.
-
+Now in order to add files to track in the desired repository, click **Select Repository > Add File**, the File Explorer window shows up. Add files to your repository through the GUI. Browse your system, select the files you want to track, and add them to your project.  
+There are 2 other options, to add A whole folder at once, or to add all files in the repository.
 ![Adding a file to the repository](images/add.png)
 
 ## Commit
@@ -139,12 +141,17 @@ Cliking on **Refesh**, sets the tracked files that were modified to an **Up To D
 
 Selecting a file in the repository and then clicking on the **Remove File** button, untracks the file if it is staged (tracked), that is, the file is removed from the list of tracked files.
 
+## Rollback
+
+You can choose a previous version number to rollback to.
+
 ## Dependencies
 
 Throughout its development, ZIM-VCS has utilized several key dependencies to enhance functionality and user experience:
 
 - **QT Libraries**: For creating the graphical user interface and managing user interactions.
 - **OpenSSL**: For ensuring secure data handling and storage.
+- **Minizip**: For compressing history files and folders.
 - **FileSystem Library**: For efficient and reliable file management and operations.
 
 Ensure you have these dependencies installed and properly configured in your development environment to compile and run ZIM-VCS successfully.

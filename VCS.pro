@@ -28,10 +28,13 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
-INCLUDEPATH += "C:/Program Files/OpenSSL-Win64/include"
+INCLUDEPATH += "C:/Program Files/OpenSSL-Win64/include" \
+               "C:/msys64/mingw64/include"
 
 LIBS += -L"C:/Program Files/OpenSSL-Win64/lib" \
-        -llibcrypto
+        -llibcrypto \
+        -LC:/msys64/mingw64/lib \
+        -lminizip
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

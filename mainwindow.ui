@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>513</width>
+    <width>625</width>
     <height>579</height>
    </rect>
   </property>
@@ -30,10 +30,10 @@
      <widget class="QTabWidget" name="tabWidget">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>50</x>
         <y>20</y>
         <width>571</width>
-        <height>491</height>
+        <height>551</height>
        </rect>
       </property>
       <property name="currentIndex">
@@ -158,14 +158,14 @@
          </rect>
         </property>
         <property name="text">
-         <string>Add File</string>
+         <string>Add Files</string>
         </property>
        </widget>
        <widget class="QPushButton" name="commitBtn">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>90</y>
+          <x>290</x>
+          <y>470</y>
           <width>131</width>
           <height>31</height>
          </rect>
@@ -177,28 +177,28 @@
        <widget class="QPushButton" name="removeFileBtn">
         <property name="geometry">
          <rect>
-          <x>330</x>
+          <x>450</x>
           <y>90</y>
-          <width>111</width>
+          <width>91</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Remove File</string>
+         <string>Remove</string>
         </property>
        </widget>
        <widget class="QLabel" name="repoName">
         <property name="geometry">
          <rect>
-          <x>100</x>
+          <x>0</x>
           <y>10</y>
-          <width>361</width>
+          <width>561</width>
           <height>51</height>
          </rect>
         </property>
         <property name="font">
          <font>
-          <pointsize>26</pointsize>
+          <pointsize>40</pointsize>
           <bold>true</bold>
           <underline>true</underline>
          </font>
@@ -217,13 +217,62 @@
         <property name="geometry">
          <rect>
           <x>470</x>
-          <y>90</y>
+          <y>470</y>
           <width>81</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
          <string>Refresh</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="addAllBtn">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>90</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Add All</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="addFolderBtn">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>90</y>
+          <width>121</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Add Folder</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="rollback">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>470</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="rollbackBtn">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>470</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Rollback</string>
         </property>
        </widget>
       </widget>
@@ -307,7 +356,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>513</width>
+     <width>625</width>
      <height>17</height>
     </rect>
    </property>

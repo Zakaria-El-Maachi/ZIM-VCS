@@ -10,9 +10,12 @@ public:
     std::vector<std::string> getFiles();
     void init();
     void add(const std::string& filename);
+    void addDirectory(const std::string& foldername);
     void commit();
     void refresh();
     std::vector<bool> status();
+    int getVersion();
+    void rollback(int version);
 private:
     Repository repo;
 };

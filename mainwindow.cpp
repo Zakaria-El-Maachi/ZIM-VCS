@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QFileDialog"
+#include "QFileInfo"
 #include "QMessageBox"
 #include "CLICode/VersionControlSystem.h"
 #include <filesystem>
@@ -45,24 +46,48 @@ void MainWindow::on_initBtn_clicked()
 // Slot function to remove a repository from the list
 void MainWindow::on_removeRepoBtn_clicked()
 {
-    // Similar structure to initBtn for selecting directory
     QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "C://");
 
-    // Check if a directory is selected
     if (dirPath.isEmpty()) {
         displayError("No Folder has been selected");
     } else {
-        // Check for specific version control file in directory
-        QString filePath = QDir(dirPath).filePath("version_control.csv");
+        QDir dir(dirPath);
 
-        if (QFile::exists(filePath)) {
-            // If file exists, attempt to remove it, else show error
-            if (!QFile::remove(filePath)) {
-                displayError("Error Removing Repository");
-            } else{
-                delete repos->currentItem();
+        // Prepare file paths for version_control.csv and version.txt
+        QString versionControlPath = dir.filePath("version_control.csv");
+        QString versionPath = dir.filePath("version.txt");
+        QString historyPath = dir.filePath("history");  // History is a directory
+
+        // Check if the repository files exist
+        if (QFile::exists(versionControlPath)) {
+            bool removed = true;
+
+            // Remove version_control.csv
+            if (!QFile::remove(versionControlPath)) {
+                displayError("Error removing version_control.csv");
+                removed = false;
             }
-        } else{
+
+            // Remove version.txt
+            if (!QFile::remove(versionPath)) {
+                displayError("Error removing version.txt");
+                removed = false;
+            }
+
+            // Remove the history directory
+            if (QDir(historyPath).exists()) {
+                QDir historyDir(historyPath);
+                historyDir.removeRecursively();  // Remove all contents and the directory itself
+            }
+
+            // If all items removed successfully, update the UI accordingly
+            if (removed) {
+                delete repos->currentItem();
+                ui->repoName->setText("No Repository Selected");
+                ui->statusList->setRowCount(0);
+            }
+
+        } else {
             displayError("This folder is not a repository");
         }
     }
@@ -83,19 +108,28 @@ void MainWindow::on_selectBtn_clicked()
     }
 }
 
+
+
 void MainWindow::on_addBtn_clicked()
 {
     try {
         if (QListWidgetItem *currentItem = repos->currentItem()) {
             QString baseFolderPath = getCurrentRepo();
-            QString filename = QFileDialog::getOpenFileName(this, tr("Select File"), baseFolderPath, "All files (*.*)");
+            QStringList filenames = QFileDialog::getOpenFileNames(this, tr("Select Files"), baseFolderPath, "All files (*.*)");
 
-            if (filename.isEmpty()) {
-                displayError("No File has been selected");
+            if (filenames.isEmpty()) {
+                displayError("No files have been selected");
             } else {
                 VersionControlSystem fileVcs(baseFolderPath.toStdString());
-                fileVcs.add(filename.toStdString());
-                addFileToStatusList(baseFolderPath, filename);
+                QStringList reservedNames = { "version_control.csv", "version.txt", "history" };
+
+                for (const QString &filename : filenames) {
+                    // Skip if the file is a reserved name
+                    if (reservedNames.contains(QFileInfo(filename).fileName())) continue;
+
+                    fileVcs.add(filename.toStdString());
+                    addFileToStatusList(baseFolderPath, filename);
+                }
             }
         } else {
             throw std::runtime_error("No Repository to add files from.");
@@ -105,48 +139,70 @@ void MainWindow::on_addBtn_clicked()
     }
 }
 
-// Utility Functions
-void MainWindow::displayError(const QString &message) {
-    QMessageBox::information(this, tr("Selection Error"), message);
-}
 
-QString MainWindow::getCurrentRepo() {
-    return repos->currentItem()->text();
-}
+void MainWindow::on_addFolderBtn_clicked()
+{
+    try {
+        if (QListWidgetItem *currentItem = repos->currentItem()) {
+            QString baseFolderPath = getCurrentRepo();
+            QString directoryName = QFileDialog::getExistingDirectory(this, tr("Select Directory"), baseFolderPath);
 
-void MainWindow::updateRepoSelection(QListWidgetItem *currentItem) {
-    QString fullPath = currentItem->text();
-    QFileInfo fileInfo(fullPath);
-    QString lastPart = fileInfo.fileName();
-    ui->repoName->setText(lastPart);
-    updateStatusList();
-}
+            if (directoryName.isEmpty()) {
+                displayError("No directory has been selected");
+            } else {
+                QString dirNameOnly = QFileInfo(directoryName).fileName();
+                // Skip if the directory is reserved
+                if (dirNameOnly == "history") {
+                    displayError("Reserved directory cannot be added");
+                    return;
+                }
 
-void MainWindow::updateStatusList() {
-    files->setRowCount(0);
-    QString baseFolderPath = getCurrentRepo();
-    QDir baseFolder(baseFolderPath);
-    VersionControlSystem fileVcs(baseFolderPath.toStdString());
-    std::vector<std::string> fileNames = fileVcs.getFiles();
-    std::cout << fileNames.size() << std::endl;
-    std::vector<bool> status = fileVcs.status();
-    for (int i = 0; i < fileNames.size(); i++) {
-        int row = files->rowCount();
-        files->insertRow(row);
-        files->setItem(row, 0, new QTableWidgetItem(baseFolder.relativeFilePath(QString::fromStdString(fileNames[i]))));
-        files->setItem(row, 1, new QTableWidgetItem((status[i])?"Modified":"Up to Date"));
+                VersionControlSystem fileVcs(baseFolderPath.toStdString());
+                fileVcs.addDirectory(directoryName.toStdString());
+                addFileToStatusList(baseFolderPath, directoryName);
+            }
+        } else {
+            throw std::runtime_error("No Repository to add files from.");
+        }
+    } catch (const std::exception& e) {
+        displayError(e.what());
     }
 }
 
-void MainWindow::addFileToStatusList(const QString &baseFolderPath, const QString &filename) {
-    QDir baseFolder(baseFolderPath);
-    QString relativePath = baseFolder.relativeFilePath(filename);
 
-    int row = files->rowCount();
-    files->insertRow(row);
-    files->setItem(row, 0, new QTableWidgetItem(relativePath));
-    files->setItem(row, 1, new QTableWidgetItem("New"));
+
+void MainWindow::on_addAllBtn_clicked()
+{
+    try {
+        if (QListWidgetItem *currentItem = repos->currentItem()) {
+            QString baseFolderPath = getCurrentRepo();
+            QDir baseFolderDir(baseFolderPath);
+            VersionControlSystem fileVcs(baseFolderPath.toStdString());
+            QStringList reservedNames = { "version_control.csv", "version.txt", "history" };
+
+            QFileInfoList entries = baseFolderDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+            for (const QFileInfo &entry : entries) {
+                QString path = entry.absoluteFilePath();
+                // Skip if the item is reserved
+                if (reservedNames.contains(entry.fileName())) continue;
+
+                if (entry.isDir()) {
+                    fileVcs.addDirectory(path.toStdString());
+                } else if (entry.isFile()) {
+                    fileVcs.add(path.toStdString());
+                }
+                addFileToStatusList(baseFolderPath, path);
+            }
+
+        } else {
+            throw std::runtime_error("No Repository to add files from.");
+        }
+    } catch (const std::exception& e) {
+        displayError(e.what());
+    }
 }
+
+
 
 void MainWindow::on_removeFileBtn_clicked()
 {
@@ -184,10 +240,7 @@ void MainWindow::on_commitBtn_clicked()
             QString baseFolderPath = getCurrentRepo();
             VersionControlSystem fileVcs(baseFolderPath.toStdString());
             fileVcs.commit();
-            for (int row = 0; row < files->rowCount(); row++) {
-                QTableWidgetItem *fileStatus = files->item(row, 1);
-                fileStatus->setText("Up to Date");
-            }
+            updateRepoSelection(repos->currentItem());
         } else {
             throw std::runtime_error("No Repository to add files from.");
         }
@@ -248,3 +301,67 @@ void MainWindow::on_signin_clicked()
     }
 
 }
+
+
+void MainWindow::on_rollbackBtn_clicked()
+{
+    try{
+        if (QListWidgetItem *currentItem = repos->currentItem()){
+            QString baseFolderPath = getCurrentRepo();
+            VersionControlSystem fileVcs(baseFolderPath.toStdString());
+            fileVcs.rollback(ui->rollback->text().toInt());
+            updateRepoSelection(currentItem);
+        } else {
+            throw std::runtime_error("No Repository to rollback from.");
+        }
+    } catch (const std::exception& e) {
+        displayError(e.what());
+    }
+}
+
+
+// Utility Functions
+void MainWindow::displayError(const QString &message) {
+    QMessageBox::information(this, tr("Selection Error"), message);
+}
+
+QString MainWindow::getCurrentRepo() {
+    return repos->currentItem()->text();
+}
+
+void MainWindow::updateRepoSelection(QListWidgetItem *currentItem) {
+    QString fullPath = currentItem->text();
+    QFileInfo fileInfo(fullPath);
+    QString lastPart = fileInfo.fileName();
+    VersionControlSystem vcs(fullPath.toStdString());
+    ui->repoName->setText(lastPart + " : Version " + QString::number(vcs.getVersion()));
+    updateStatusList();
+}
+
+void MainWindow::updateStatusList() {
+    files->setRowCount(0);
+    QString baseFolderPath = getCurrentRepo();
+    QDir baseFolder(baseFolderPath);
+    VersionControlSystem fileVcs(baseFolderPath.toStdString());
+    std::vector<std::string> fileNames = fileVcs.getFiles();
+    std::cout << fileNames.size() << std::endl;
+    std::vector<bool> status = fileVcs.status();
+    for (int i = 0; i < fileNames.size(); i++) {
+        int row = files->rowCount();
+        files->insertRow(row);
+        files->setItem(row, 0, new QTableWidgetItem(baseFolder.relativeFilePath(QString::fromStdString(fileNames[i]))));
+        files->setItem(row, 1, new QTableWidgetItem((status[i])?"Modified":"Up to Date"));
+    }
+}
+
+void MainWindow::addFileToStatusList(const QString &baseFolderPath, const QString &filename) {
+    QDir baseFolder(baseFolderPath);
+    QString relativePath = baseFolder.relativeFilePath(filename);
+
+    int row = files->rowCount();
+    files->insertRow(row);
+    files->setItem(row, 0, new QTableWidgetItem(relativePath));
+    files->setItem(row, 1, new QTableWidgetItem("New"));
+}
+
+

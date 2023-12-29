@@ -40,6 +40,12 @@ private slots:
 
     void on_signin_clicked();
 
+    void on_addFolderBtn_clicked();
+
+    void on_addAllBtn_clicked();
+
+    void on_rollbackBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     QListWidget *repos;
