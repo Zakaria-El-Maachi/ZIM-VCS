@@ -39,7 +39,24 @@ void MainWindow::on_initBtn_clicked()
 
 void MainWindow::on_removeRepoBtn_clicked()
 {
-    delete repos->currentItem();
+
+    QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "C://");
+
+    if (dirPath.isEmpty()) {
+        displayError("No Folder has been selected");
+    } else {
+        QString filePath = QDir(dirPath).filePath("version_control.csv");
+
+        if (QFile::exists(filePath)) {
+            if (!QFile::remove(filePath)) {
+                displayError("Error Removing Repository");
+            } else{
+                delete repos->currentItem();
+            }
+        } else{
+            displayError("This folder is not a repository");
+        }
+    }
 }
 
 void MainWindow::on_selectBtn_clicked()
@@ -221,4 +238,3 @@ void MainWindow::on_signin_clicked()
     }
 
 }
-
